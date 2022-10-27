@@ -4,8 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
-
-public class SellingDocument extends BasicDocument {
+public class AdmissionDocument extends BasicDocument {
     private String warehouse;
     private List<Map> products;
 
@@ -25,12 +24,12 @@ public class SellingDocument extends BasicDocument {
         this.products = products;
     }
 
-    public SellingDocument() {
-        setDocType(DocType.SELL);
+    public AdmissionDocument() {
+        setDocType(DocType.ADMISSION);
     }
 
-    public SellingDocument(long number, LocalDateTime date, Map<String, String> data, String warehouse, List<Map> products) {
-        super(number, DocType.SELL, date);
+    public AdmissionDocument(long number, LocalDateTime date, Map<String, String> data, String warehouse, List<Map> products) {
+        super(number, DocType.ADMISSION, date);
         this.warehouse = warehouse;
         this.products = products;
     }

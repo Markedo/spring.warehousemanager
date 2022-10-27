@@ -13,8 +13,8 @@ INSERT INTO products (vendor_code, name, purchase_price, selling_price) VALUES (
 INSERT INTO products (vendor_code, name, purchase_price, selling_price) VALUES (8, 'POTATO', 8.80, 16.70);
 INSERT INTO products (vendor_code, name, purchase_price, selling_price) VALUES (9, 'MAYO', 29.30, 77.99);
 
-INSERT INTO documents (number, doc_type, date) VALUES (1, 1, '2022-06-04 18:13:56');
-INSERT INTO documents (number, doc_type, date) VALUES (2, 2, '2022-06-03 11:10:00');
+INSERT INTO documents_log (number, doc_type, date) VALUES (1, 1, '2022-06-04 18:13:56');
+INSERT INTO documents_log (number, doc_type, date) VALUES (2, 2, '2022-06-03 11:10:00');
 
 INSERT INTO storage (storage_id, vendor_code, warehouse, stock) VALUES (1, 1, 'MSK-S', 401123);
 INSERT INTO storage (storage_id, vendor_code, warehouse, stock) VALUES (2, 2, 'SPB', 9995435);

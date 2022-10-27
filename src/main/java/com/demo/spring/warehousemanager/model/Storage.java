@@ -14,7 +14,6 @@ public class Storage {
     @Id
     @GeneratedValue
     private long storageId;
-
     @NonNull
     private long vendorCode;
     private String warehouse;

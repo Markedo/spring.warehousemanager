@@ -2,10 +2,10 @@ package com.demo.spring.warehousemanager.rest;
 
 import com.demo.spring.warehousemanager.model.Product;
 import com.demo.spring.warehousemanager.model.Storage;
-import com.demo.spring.warehousemanager.model.documents.DocType;
 import com.demo.spring.warehousemanager.model.documents.SellingDocument;
 import com.demo.spring.warehousemanager.repositories.ProductRepository;
 import com.demo.spring.warehousemanager.repositories.StorageRepository;
+import com.demo.spring.warehousemanager.processors.documentprocessor.MainDocumentProcessor;
 import com.demo.spring.warehousemanager.utils.JsonUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.LoggerFactory;
@@ -34,6 +34,9 @@ public class WarehouseManagerRestController {
     @Autowired
     private StorageRepository storageRepository;
 
+    @Autowired
+    private MainDocumentProcessor mainDocumentProcessor;
+
     @Value("${page.title}")
     private String PAGE_TITLE;
 
@@ -53,18 +56,18 @@ public class WarehouseManagerRestController {
     void postSellDoc(@RequestBody String request) {
         log.info("Selling document received via REST API");
         log.debug("JSON request body: " + request);
-        SellingDocument document = new SellingDocument();
-        document.setDate(LocalDateTime.now());
         try {
             Map<String, Object>parsedJson = JsonUtils.deserializeStr(request);
+            SellingDocument document = new SellingDocument();
+            document.setDate(LocalDateTime.now());
             document.setNumber(((Number)parsedJson.get("number")).longValue());
             document.setWarehouse((String) parsedJson.get("warehouse"));
-            document.setProducts((List<SellingDocument.Product>) parsedJson.get("products"));
+            document.setProducts((List<Map>) parsedJson.get("products"));
+            mainDocumentProcessor.processSellingDoc(document);
         } catch (JsonProcessingException e) {
             log.error(e.toString());
             throw new RuntimeException(e);
         }
-        System.out.println(request);
     }
 
 }
