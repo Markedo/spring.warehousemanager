@@ -1,6 +1,6 @@
 package com.demo.spring.warehousemanager.processors.documentprocessor;
 
-import com.demo.spring.warehousemanager.model.Product;
+import com.demo.spring.warehousemanager.model.ListedProduct;
 import com.demo.spring.warehousemanager.model.Storage;
 import com.demo.spring.warehousemanager.model.documents.SellingDocument;
 import com.demo.spring.warehousemanager.repositories.ProductRepository;
@@ -23,26 +23,36 @@ class SellingDocumentProcessor {
 
     void processDocument(SellingDocument sellingDocument) throws IllegalArgumentException {
         List<Storage> editedStorages = Collections.synchronizedList(new LinkedList<Storage>());
-        List<Product> editedStockProducts = Collections.synchronizedList(new LinkedList<Product>());
-
+        List<Storage> nullifiedStorages = Collections.synchronizedList(new LinkedList<Storage>());
+        List<ListedProduct> editedStockListedProducts = Collections.synchronizedList(new LinkedList<ListedProduct>());
+        String warehouse = sellingDocument.getWarehouse();
         sellingDocument.getProducts().forEach(
                 product -> {
-                    String warehouse = sellingDocument.getWarehouse();
-                    long vendorCode = Long.parseLong(product.get("vendorCode").toString());
-
+                    Long vendorCode = Long.parseLong(product.get("vendorCode"));
                     Storage storage = storageRepository.findByVendorCodeAndWarehouse(vendorCode, warehouse);
                     if (storage == null)
-                        throw new IllegalArgumentException("Can't find product with provided vendor code");
-                    long quantity = Long.parseLong(product.get("quantity").toString());
-                    storage.setStock(storage.getStock() - quantity);
-                    editedStorages.add(storage);
+                        throw new IllegalArgumentException("Can't find product with provided vendor code.");
 
-                    Product stockProduct = productRepository.findById(vendorCode).get();
-                    if (stockProduct == null)
-                        throw new IllegalArgumentException("Can't find product with provided vendor code");
-                    stockProduct.setSellingPrice(new BigDecimal(product.get("sellingPrice").toString()));
-                    editedStockProducts.add(stockProduct);
+                    long quantity = Long.parseLong(product.get("quantity"));
+                    long editedStocks = storage.getStock() - quantity;
+                    if (editedStocks < 0)
+                        throw new IllegalArgumentException("Provided quantity exceeding stocks.");
+                    else {
+                        storage.setStock(editedStocks);
+                        editedStorages.add(storage);
+                    }
+                    if (editedStocks == 0) nullifiedStorages.add(storage);
+
+                    ListedProduct stockListedProduct = productRepository.findById(vendorCode).get();
+                    if (stockListedProduct == null)
+                        throw new IllegalArgumentException("Can't find product with provided vendor code.");
+                    stockListedProduct.setSellingPrice(new BigDecimal(product.get("price")));
+                    editedStockListedProducts.add(stockListedProduct);
                 }
         );
+        storageRepository.saveAll(editedStorages);
+        storageRepository.deleteAll(nullifiedStorages);
+        productRepository.saveAll(editedStockListedProducts);
     }
+
 }

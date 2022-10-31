@@ -1,7 +1,9 @@
 package com.demo.spring.warehousemanager.rest;
 
-import com.demo.spring.warehousemanager.model.Product;
+import com.demo.spring.warehousemanager.model.ListedProduct;
 import com.demo.spring.warehousemanager.model.Storage;
+import com.demo.spring.warehousemanager.model.documents.AdmissionDocument;
+import com.demo.spring.warehousemanager.model.documents.MovingDocument;
 import com.demo.spring.warehousemanager.model.documents.SellingDocument;
 import com.demo.spring.warehousemanager.repositories.ProductRepository;
 import com.demo.spring.warehousemanager.repositories.StorageRepository;
@@ -26,6 +28,8 @@ public class WarehouseManagerRestController {
     private final String GET_ALL_PRODUCTS_PATH = SERVICE_PATH + "/getAllProducts";
     private final String CHECK_STOCK_PATH = SERVICE_PATH + "/getStock";
     private final String SELL_DOC_PATH= SERVICE_PATH + "/postSellDoc";
+    private final String ADMISSION_DOC_PATH= SERVICE_PATH + "/postAdmissionDoc";
+    private final String MOVING_DOC_PATH= SERVICE_PATH + "/postMovingDoc";
     private final String GET_DOC_PATH = SERVICE_PATH + "/getDoc";
 
     @Autowired
@@ -43,7 +47,7 @@ public class WarehouseManagerRestController {
     private org.slf4j.Logger log = LoggerFactory.getLogger(WarehouseManagerRestController.class);
 
     @GetMapping(GET_ALL_PRODUCTS_PATH)
-    List<Product> getAllProducts() {
+    List<ListedProduct> getAllProducts() {
         return productRepository.findAll();
     }
 
@@ -60,10 +64,47 @@ public class WarehouseManagerRestController {
             Map<String, Object>parsedJson = JsonUtils.deserializeStr(request);
             SellingDocument document = new SellingDocument();
             document.setDate(LocalDateTime.now());
-            document.setNumber(((Number)parsedJson.get("number")).longValue());
+            document.setNumber((String) parsedJson.get("number"));
             document.setWarehouse((String) parsedJson.get("warehouse"));
-            document.setProducts((List<Map>) parsedJson.get("products"));
+            document.setProducts((List<Map<String, String>>) parsedJson.get("products"));
             mainDocumentProcessor.processSellingDoc(document);
+        } catch (JsonProcessingException e) {
+            log.error(e.toString());
+            throw new RuntimeException(e);
+        }
+    }
+
+    @PostMapping(ADMISSION_DOC_PATH)
+    void postAdmissionDoc(@RequestBody String request) {
+        log.info("Admission document received via REST API");
+        log.debug("JSON request body: " + request);
+        try {
+            Map<String, Object>parsedJson = JsonUtils.deserializeStr(request);
+            AdmissionDocument document = new AdmissionDocument();
+            document.setDate(LocalDateTime.now());
+            document.setNumber((String) parsedJson.get("number"));
+            document.setWarehouse((String) parsedJson.get("warehouse"));
+            document.setProducts((List<Map<String, String>>) parsedJson.get("products"));
+            mainDocumentProcessor.processAdmissionDoc(document);
+        } catch (JsonProcessingException e) {
+            log.error(e.toString());
+            throw new RuntimeException(e);
+        }
+    }
+
+    @PostMapping(MOVING_DOC_PATH)
+    void postMovingDoc(@RequestBody String request) {
+        log.info("Moving document received via REST API");
+        log.debug("JSON request body: " + request);
+        try {
+            Map<String, Object>parsedJson = JsonUtils.deserializeStr(request);
+            MovingDocument document = new MovingDocument();
+            document.setDate(LocalDateTime.now());
+            document.setNumber((String) parsedJson.get("number"));
+            document.setToWarehouse((String) parsedJson.get("toWarehouse"));
+            document.setFromWarehouse((String) parsedJson.get("fromWarehouse"));
+            document.setProducts((List<Map<String, String>>) parsedJson.get("products"));
+            mainDocumentProcessor.processMovingDoc(document);
         } catch (JsonProcessingException e) {
             log.error(e.toString());
             throw new RuntimeException(e);

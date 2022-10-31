@@ -7,4 +7,5 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional
 public interface LoggedDocumetRepository extends JpaRepository<LoggedDocument, Long> {
+    LoggedDocument findByNumber(String number);
 }

@@ -9,29 +9,29 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name = "products")
-public class Product {
+public class ListedProduct {
     @Id
     @NonNull
-    private long vendorCode;
+    private Long vendorCode;
     private String name;
     private BigDecimal purchasePrice;
     private BigDecimal sellingPrice;
 
-    public Product() {
+    public ListedProduct() {
     }
 
-    public Product(@NonNull long vendorCode, String name, BigDecimal purchasePrice, BigDecimal sellingPrice) {
+    public ListedProduct(@NonNull Long vendorCode, String name, BigDecimal purchasePrice, BigDecimal sellingPrice) {
         this.vendorCode = vendorCode;
         this.name = name;
         this.purchasePrice = purchasePrice;
         this.sellingPrice = sellingPrice;
     }
 
-    public long getVendorCode() {
+    public Long getVendorCode() {
         return vendorCode;
     }
 
-    public void setVendorCode(@NonNull long vendorCode) {
+    public void setVendorCode(@NonNull Long vendorCode) {
         this.vendorCode = vendorCode;
     }
 

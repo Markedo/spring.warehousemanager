@@ -1,9 +1,6 @@
 package com.demo.spring.warehousemanager.processors.documentprocessor;
 
-import com.demo.spring.warehousemanager.model.documents.AdmissionDocument;
-import com.demo.spring.warehousemanager.model.documents.BasicDocument;
-import com.demo.spring.warehousemanager.model.documents.LoggedDocument;
-import com.demo.spring.warehousemanager.model.documents.SellingDocument;
+import com.demo.spring.warehousemanager.model.documents.*;
 import com.demo.spring.warehousemanager.repositories.LoggedDocumetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,25 +15,30 @@ public class MainDocumentProcessor {
     AdmissionDocumentProcessor admissionDocumentProcessor;
 
     @Autowired
-    LoggedDocumetRepository loggedDocumetRepository;
+    MovingDocumentProcessor movingDocumentProcessor;
+
+    @Autowired
+    DocumentValidator documentValidator;
+
+    @Autowired
+    DocumentLogger documentLogger;
 
     public void processSellingDoc(SellingDocument sellingDocument) throws IllegalArgumentException {
+        documentValidator.isDocumentValid(sellingDocument);
         sellingDocumentProcessor.processDocument(sellingDocument);
-        logDocument(sellingDocument, sellingDocument.getProducts().toString());
+        documentLogger.logDocument(sellingDocument, sellingDocument.getProducts().toString());
     }
 
     public void processAdmissionDoc(AdmissionDocument admissionDocument) throws IllegalArgumentException {
+        documentValidator.isDocumentValid(admissionDocument);
         admissionDocumentProcessor.processDocument(admissionDocument);
-        logDocument(admissionDocument, admissionDocument.getProducts().toString());
+        documentLogger.logDocument(admissionDocument, admissionDocument.getProducts().toString());
     }
 
-    private void logDocument(BasicDocument document, String docData) {
-        LoggedDocument loggedDocument = new LoggedDocument(
-                document.getNumber(),
-                document.getDocType(),
-                document.getDate(),
-                docData);
-        loggedDocumetRepository.save(loggedDocument);
+    public void processMovingDoc(MovingDocument movingDocument) throws IllegalArgumentException {
+        documentValidator.isDocumentValid(movingDocument);
+        movingDocumentProcessor.processDocument(movingDocument);
+        documentLogger.logDocument(movingDocument, movingDocument.getProducts().toString());
     }
 
 }

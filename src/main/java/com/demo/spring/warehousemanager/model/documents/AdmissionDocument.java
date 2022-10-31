@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class AdmissionDocument extends BasicDocument {
     private String warehouse;
-    private List<Map> products;
+    private List<Map<String, String>> products;
 
     public String getWarehouse() {
         return warehouse;
@@ -16,11 +16,11 @@ public class AdmissionDocument extends BasicDocument {
         this.warehouse = warehouse;
     }
 
-    public List<Map> getProducts() {
+    public List<Map<String, String>> getProducts() {
         return products;
     }
 
-    public void setProducts(List<Map> products) {
+    public void setProducts(List<Map<String, String>> products) {
         this.products = products;
     }
 
@@ -28,7 +28,7 @@ public class AdmissionDocument extends BasicDocument {
         setDocType(DocType.ADMISSION);
     }
 
-    public AdmissionDocument(long number, LocalDateTime date, Map<String, String> data, String warehouse, List<Map> products) {
+    public AdmissionDocument(String number, LocalDateTime date, Map<String, String> data, String warehouse, List<Map<String, String>> products) {
         super(number, DocType.ADMISSION, date);
         this.warehouse = warehouse;
         this.products = products;

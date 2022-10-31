@@ -8,5 +8,5 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional
 public interface StorageRepository extends JpaRepository<Storage, Long> {
-    Storage findByVendorCodeAndWarehouse(long vendorCode, String warehouse);
+    Storage findByVendorCodeAndWarehouse(Long vendorCode, String warehouse);
 }

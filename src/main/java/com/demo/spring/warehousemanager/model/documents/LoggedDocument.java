@@ -1,28 +1,21 @@
 package com.demo.spring.warehousemanager.model.documents;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.springframework.lang.NonNull;
+
+import javax.persistence.*;
 import java.time.LocalDateTime;
 @Entity
 @Table(name = "documents_log")
 public class LoggedDocument extends BasicDocument {
-
-    @Id
-    private long number;
-
-    private DocType docType;
-
-    private LocalDateTime date;
 
     private String docData;
 
     public LoggedDocument() {
     }
 
-    public LoggedDocument(long number, DocType docType, LocalDateTime date, String data) {
+    public LoggedDocument(String number, DocType docType, LocalDateTime date, String docData) {
         super(number, docType, date);
-        this.docData = data;
+        this.docData = docData;
     }
 
     public String getData() {
@@ -31,9 +24,5 @@ public class LoggedDocument extends BasicDocument {
 
     public void setData(String data) {
         this.docData = data;
-    }
-
-    public void setDocType(DocType docType) {
-        this.docType = docType;
     }
 }

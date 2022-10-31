@@ -1,15 +1,13 @@
 package com.demo.spring.warehousemanager.model.documents;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
-import java.util.Map;
 
+@MappedSuperclass
 public abstract class BasicDocument {
-
-    private long number;
+    @Id
+    private String number;
 
     private DocType docType;
 
@@ -18,17 +16,17 @@ public abstract class BasicDocument {
     public BasicDocument() {
     }
 
-    public BasicDocument(long number, DocType docType, LocalDateTime date) {
+    public BasicDocument(String number, DocType docType, LocalDateTime date) {
         this.number = number;
         this.docType = docType;
         this.date = date;
     }
 
-    public long getNumber() {
+    public String getNumber() {
         return number;
     }
 
-    public void setNumber(long number) {
+    public void setNumber(String number) {
         this.number = number;
     }
 

@@ -2,37 +2,35 @@ package com.demo.spring.warehousemanager.model;
 
 import org.springframework.lang.NonNull;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "storage")
 public class Storage {
 
     @Id
-    @GeneratedValue
-    private long storageId;
     @NonNull
-    private long vendorCode;
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private Long storageId;
+    @NonNull
+    private Long vendorCode;
     private String warehouse;
     private long stock;
 
     public Storage() {
     }
 
-    public Storage(@NonNull long vendorCode, String warehouseName, long stock) {
+    public Storage(@NonNull Long vendorCode, String warehouseName, long stock) {
         this.vendorCode = vendorCode;
         this.warehouse = warehouseName;
         this.stock = stock;
     }
 
-    public long getVendorCode() {
+    public Long getVendorCode() {
         return vendorCode;
     }
 
-    public void setVendorCode(@NonNull long vendorCode) {
+    public void setVendorCode(@NonNull Long vendorCode) {
         this.vendorCode = vendorCode;
     }
 
