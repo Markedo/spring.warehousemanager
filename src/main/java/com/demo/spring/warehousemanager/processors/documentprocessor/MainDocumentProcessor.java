@@ -1,7 +1,8 @@
 package com.demo.spring.warehousemanager.processors.documentprocessor;
 
-import com.demo.spring.warehousemanager.model.documents.*;
-import com.demo.spring.warehousemanager.repositories.LoggedDocumetRepository;
+import com.demo.spring.warehousemanager.model.documents.AdmissionDocument;
+import com.demo.spring.warehousemanager.model.documents.MovingDocument;
+import com.demo.spring.warehousemanager.model.documents.SellingDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,24 +22,28 @@ public class MainDocumentProcessor {
     DocumentValidator documentValidator;
 
     @Autowired
-    DocumentLogger documentLogger;
+    LoggedDocumentProcessor loggedDocumentProcessor;
 
     public void processSellingDoc(SellingDocument sellingDocument) throws IllegalArgumentException {
         documentValidator.isDocumentValid(sellingDocument);
         sellingDocumentProcessor.processDocument(sellingDocument);
-        documentLogger.logDocument(sellingDocument, sellingDocument.getProducts().toString());
+        loggedDocumentProcessor.logDocument(sellingDocument, sellingDocument.getProducts().toString());
     }
 
     public void processAdmissionDoc(AdmissionDocument admissionDocument) throws IllegalArgumentException {
         documentValidator.isDocumentValid(admissionDocument);
         admissionDocumentProcessor.processDocument(admissionDocument);
-        documentLogger.logDocument(admissionDocument, admissionDocument.getProducts().toString());
+        loggedDocumentProcessor.logDocument(admissionDocument, admissionDocument.getProducts().toString());
     }
 
     public void processMovingDoc(MovingDocument movingDocument) throws IllegalArgumentException {
         documentValidator.isDocumentValid(movingDocument);
         movingDocumentProcessor.processDocument(movingDocument);
-        documentLogger.logDocument(movingDocument, movingDocument.getProducts().toString());
+        loggedDocumentProcessor.logDocument(movingDocument, movingDocument.getProducts().toString());
+    }
+
+    public boolean validateWarehouse(String warehouse) {
+        return documentValidator.isWarehouseValid(warehouse);
     }
 
 }

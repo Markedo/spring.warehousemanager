@@ -21,7 +21,7 @@ public class DocumentValidator {
     @Autowired
     WarehouseRepository warehouseRepository;
 
-    public boolean isDocumentValid(BasicDocument document) {
+    public boolean isDocumentValid(BasicDocument document) throws IllegalArgumentException {
         if(document.getNumber().isEmpty() || !RegexUtil.checkRegex(document.getNumber().toString(), ".+")) {
             throw new IllegalArgumentException("Invalid document number.");
         }
@@ -59,7 +59,7 @@ public class DocumentValidator {
         return true;
     }
 
-    private boolean isProductValid(List<Map<String, String>> products, DocType docType) {
+    private boolean isProductValid(List<Map<String, String>> products, DocType docType) throws IllegalArgumentException {
         boolean valid = false;
         products.forEach(
                 product -> {
@@ -87,15 +87,14 @@ public class DocumentValidator {
     }
 
     private boolean isDocTypeValid(BasicDocument document) {
-       boolean checker = Arrays.stream(DocType.values()).anyMatch((t) -> t.name().equals(document.getDocType().name()));
-       return checker;
+        return Arrays.stream(DocType.values()).anyMatch((t) -> t.name().equals(document.getDocType().name()));
     }
 
     private boolean isDocumentNumberExist(String documentNumber) {
         return loggedDocumetRepository.findByNumber(documentNumber) != null;
     }
 
-    private boolean isWarehouseValid(String warehouse) {
+    boolean isWarehouseValid(String warehouse) {
         return warehouseRepository.findByWarehouseCode(warehouse) != null;
     }
 }

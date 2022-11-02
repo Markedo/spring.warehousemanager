@@ -2,7 +2,7 @@ package com.demo.spring.warehousemanager.processors.documentprocessor;
 
 import com.demo.spring.warehousemanager.model.Storage;
 import com.demo.spring.warehousemanager.model.documents.MovingDocument;
-import com.demo.spring.warehousemanager.repositories.ProductRepository;
+import com.demo.spring.warehousemanager.repositories.ListedProductRepository;
 import com.demo.spring.warehousemanager.repositories.StorageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,7 +17,7 @@ class MovingDocumentProcessor {
     StorageRepository storageRepository;
 
     @Autowired
-    ProductRepository productRepository;
+    ListedProductRepository listedProductRepository;
 
     void processDocument(MovingDocument movingDocument) throws IllegalArgumentException {
         List<Storage> editedStorages = Collections.synchronizedList(new LinkedList<Storage>());

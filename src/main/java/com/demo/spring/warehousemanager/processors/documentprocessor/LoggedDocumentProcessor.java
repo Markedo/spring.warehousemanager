@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DocumentLogger {
+public class LoggedDocumentProcessor {
     @Autowired
     LoggedDocumetRepository loggedDocumetRepository;
     public void logDocument(BasicDocument document, String docData) {

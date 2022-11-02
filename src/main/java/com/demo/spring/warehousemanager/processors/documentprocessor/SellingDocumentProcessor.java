@@ -3,7 +3,7 @@ package com.demo.spring.warehousemanager.processors.documentprocessor;
 import com.demo.spring.warehousemanager.model.ListedProduct;
 import com.demo.spring.warehousemanager.model.Storage;
 import com.demo.spring.warehousemanager.model.documents.SellingDocument;
-import com.demo.spring.warehousemanager.repositories.ProductRepository;
+import com.demo.spring.warehousemanager.repositories.ListedProductRepository;
 import com.demo.spring.warehousemanager.repositories.StorageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,7 +19,7 @@ class SellingDocumentProcessor {
     StorageRepository storageRepository;
 
     @Autowired
-    ProductRepository productRepository;
+    ListedProductRepository listedProductRepository;
 
     void processDocument(SellingDocument sellingDocument) throws IllegalArgumentException {
         List<Storage> editedStorages = Collections.synchronizedList(new LinkedList<Storage>());
@@ -43,7 +43,7 @@ class SellingDocumentProcessor {
                     }
                     if (editedStocks == 0) nullifiedStorages.add(storage);
 
-                    ListedProduct stockListedProduct = productRepository.findById(vendorCode).get();
+                    ListedProduct stockListedProduct = listedProductRepository.findById(vendorCode).get();
                     if (stockListedProduct == null)
                         throw new IllegalArgumentException("Can't find product with provided vendor code.");
                     stockListedProduct.setSellingPrice(new BigDecimal(product.get("price")));
@@ -52,7 +52,7 @@ class SellingDocumentProcessor {
         );
         storageRepository.saveAll(editedStorages);
         storageRepository.deleteAll(nullifiedStorages);
-        productRepository.saveAll(editedStockListedProducts);
+        listedProductRepository.saveAll(editedStockListedProducts);
     }
 
 }
