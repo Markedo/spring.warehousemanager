@@ -9,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 class AdmissionDocumentProcessor {
@@ -26,23 +23,24 @@ class AdmissionDocumentProcessor {
         //Generate synced collections of Storage and ListedProducts to keep an order of entity processing and adding to the database
         List<Storage> editedStorages = Collections.synchronizedList(new LinkedList<Storage>());
         List<ListedProduct> editedProducts = Collections.synchronizedList(new LinkedList<ListedProduct>());
+        HashSet<Long> newVendorCodes = new HashSet();
         String warehouse = admissionDocument.getWarehouse();
         admissionDocument.getProducts().forEach(
                 product -> {
                     //Product with zero quantity would not be added
-                    if (Long.parseLong(product.get("quantity")) > 0) {
+                    if (Long.parseLong(product.get("quantity")) >= 0) {
                         Long vendorCode = Long.parseLong(product.get("vendorCode"));
-                        ListedProduct stockListedProduct = new ListedProduct();
-                        try {
-                            stockListedProduct = listedProductRepository.findById(vendorCode).get();
-                        } catch (Exception e) {
-                        }
-                        if (stockListedProduct.getVendorCode() == null) {
-                            addNewProduct(product, warehouse, vendorCode, editedStorages, editedProducts);
+                        ListedProduct listedProduct = listedProductRepository.findByVendorCode(vendorCode);
+                        if (listedProduct == null) {
+                            if(!newVendorCodes.contains(vendorCode)) {
+                                addNewProduct(product, warehouse, vendorCode, editedStorages, editedProducts);
+                                newVendorCodes.add(vendorCode);
+                            }
+                            else {
+                                addNewItemWithSameVendorCode(product, vendorCode, editedStorages, editedProducts);
+                            }
                         } else {
-                            Storage storage = storageRepository.findByVendorCodeAndWarehouse(vendorCode, warehouse);
-                            if (storage == null) addNewProduct(product, warehouse, vendorCode, editedStorages, editedProducts);
-                            else editExistingProduct(product, storage, vendorCode, editedStorages, editedProducts);
+                            editExistingProduct(product, warehouse, vendorCode, editedStorages, editedProducts);
                         }
                     }
                 }
@@ -67,7 +65,8 @@ class AdmissionDocumentProcessor {
         editedStorages.add(storage);
     };
 
-    private void editExistingProduct(Map<String, String> product, Storage storage, Long vendorCode, List<Storage> editedStorages, List<ListedProduct> editedProducts) {
+    private void editExistingProduct(Map<String, String> product, String warehouse, Long vendorCode, List<Storage> editedStorages, List<ListedProduct> editedProducts) {
+        Storage storage = storageRepository.findByVendorCodeAndWarehouse(vendorCode, warehouse);
         long quantity = Long.parseLong(product.get("quantity"));
         storage.setStock(storage.getStock() + quantity);
         editedStorages.add(storage);
@@ -76,5 +75,27 @@ class AdmissionDocumentProcessor {
         stockListedProduct.setName(product.get("name"));
         stockListedProduct.setPurchasePrice(new BigDecimal(product.get("price")));
         editedProducts.add(stockListedProduct);
+    }
+
+    private void addNewItemWithSameVendorCode(Map<String, String> product, Long vendorCode, List<Storage> editedStorages, List<ListedProduct> editedProducts) {
+        ListedProduct addedProduct = editedProducts.stream()
+                .filter(p -> vendorCode.equals(p.getVendorCode()))
+                .findAny()
+                .orElse(null);
+        Storage addedStorage = editedStorages.stream()
+                .filter(s -> vendorCode.equals(s.getVendorCode()))
+                .findAny()
+                .orElse(null);
+        if(addedProduct!=null && addedStorage != null) {
+            editedProducts.remove(addedProduct);
+            editedStorages.remove(addedStorage);
+
+            addedProduct.setName(product.get("name"));
+            addedProduct.setPurchasePrice(new BigDecimal(product.get("price")));
+            editedProducts.add(addedProduct);
+
+            addedStorage.setStock(addedStorage.getStock() +  Long.parseLong(product.get("quantity")));
+            editedStorages.add(addedStorage);
+        }
     }
 }

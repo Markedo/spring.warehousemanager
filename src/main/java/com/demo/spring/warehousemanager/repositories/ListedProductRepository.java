@@ -10,5 +10,6 @@ import java.util.List;
 @Repository
 @Transactional
 public interface ListedProductRepository extends JpaRepository<ListedProduct, Long> {
+    ListedProduct findByVendorCode(Long vendorCode);
     List<ListedProduct> findByName(String name);
 }
