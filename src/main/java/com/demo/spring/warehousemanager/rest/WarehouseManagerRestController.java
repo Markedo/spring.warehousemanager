@@ -26,13 +26,13 @@ import java.util.Map;
 @RestController
 public class WarehouseManagerRestController {
     private final String SERVICE_PATH = "/api";
+    private final String GET_DOC_PATH = SERVICE_PATH + "/getDoc";
     private final String GET_PRODUCT_PATH = SERVICE_PATH + "/getProduct";
     private final String CHECK_STOCK_PATH = SERVICE_PATH + "/getStock";
     private final String POST_ADMISSION_DOC = SERVICE_PATH + "/postAdmissionDoc";
     private final String POST_MOVING_DOC = SERVICE_PATH + "/postMovingDoc";
-    private final String POST_SELLING_DOC = SERVICE_PATH + "/postSellingDoc";
     private final String POST_NEW_WAREHOUSE = SERVICE_PATH + "/postNewWarehouse";
-    private final String GET_DOC_PATH = SERVICE_PATH + "/getDoc";
+    private final String POST_SELLING_DOC = SERVICE_PATH + "/postSellingDoc";
 
 
     @Autowired

@@ -22,7 +22,7 @@ public class DocumentValidator {
     WarehouseRepository warehouseRepository;
 
     public boolean isDocumentValid(BasicDocument document) throws IllegalArgumentException {
-        if(document.getNumber().isEmpty() || !RegexUtil.checkRegex(document.getNumber().toString(), ".+")) {
+        if(document.getNumber().isEmpty() || !RegexUtil.checkRegex(document.getNumber(), ".+$") ) {
             throw new IllegalArgumentException("Invalid document number.");
         }
         if(isDocumentNumberExist(document.getNumber())) {
@@ -63,20 +63,25 @@ public class DocumentValidator {
         boolean valid = false;
         products.forEach(
                 product -> {
-                    if (!product.containsKey("vendorCode") || product.get("vendorCode").isEmpty() || Long.parseLong(product.get("vendorCode")) < 0) {
+                    if (!product.containsKey("vendorCode") || product.get("vendorCode").isEmpty()
+                            || !RegexUtil.checkRegex(product.get("vendorCode"), "\\d+$")
+                            || Long.parseLong(product.get("vendorCode")) <= 0) {
                         throw new IllegalArgumentException("Product contains incorrect \"vendorCode\" section");
                     }
-                    if (!product.containsKey("quantity") || product.get("quantity").isEmpty() || Long.parseLong(product.get("quantity")) < 0) {
+                    if (!product.containsKey("quantity") || product.get("quantity").isEmpty()
+                    || !RegexUtil.checkRegex(product.get("quantity"), "\\d+$") || Long.parseLong(product.get("quantity")) <= 0) {
                         throw new IllegalArgumentException("Product contains incorrect \"quantity\" section");
                     }
 
                     if (docType.equals(DocType.ADMISSION) &&
-                            (!product.containsKey("name") || product.get("name").isEmpty())) {
+                            (!product.containsKey("name") || product.get("name").isEmpty())
+                            || !RegexUtil.checkRegex(product.get("name"), ".+$")) {
                         throw new IllegalArgumentException("Product contains incorrect \"name\" section");
                     }
 
                     if ((docType.equals(DocType.ADMISSION) || docType.equals(DocType.SELL)) &&
                             (!product.containsKey("price") || product.get("price").isEmpty())
+                            || !RegexUtil.checkRegex(product.get("price"), "[0-9.]+$")
                             || new BigDecimal(product.get("price")).compareTo(BigDecimal.ZERO) < 0) {
                         throw new IllegalArgumentException("Product contains incorrect \"price\" section");
                     }
