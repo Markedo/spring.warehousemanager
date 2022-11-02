@@ -1,0 +1,192 @@
+{
+	"info": {
+		"_postman_id": "3067b8c4-774c-48c9-90d5-f4911885393c",
+		"name": "Warehouse Manager SPRING",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "getProduct",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/getProduct",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"getProduct"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "BEER",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getStocks",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/getStock?warehouse=MSK-S",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"getStock"
+					],
+					"query": [
+						{
+							"key": "warehouse",
+							"value": "MSK-S"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getDocument",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/getDoc?docNumber=2",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"getDoc"
+					],
+					"query": [
+						{
+							"key": "docNumber",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "postAdmissionDoc",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"number\": \"12345-ABC!/3\",\n    \"warehouse\": \"MSK-S\",\n    \"products\": [\n        {\n            \"vendorCode\" : \"333\",\n            \"name\" : \"SMARTPHONE\",\n            \"quantity\" : \"50\",\n            \"price\" : \"100\"\n         },\n                 {\n            \"vendorCode\" : \"333\",\n            \"name\" : \"SMARTPHONE\",\n            \"quantity\" : \"50\",\n            \"price\" : \"999.99\"\n         },\n         {\n             \"vendorCode\" : \"444\",\n             \"name\" : \"LAPTOP\",\n             \"quantity\" : \"44\",\n             \"price\": \"299.99\"\n             }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/postAdmissionDoc",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"postAdmissionDoc"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "postSellingDoc",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"number\": \"47\",\n    \"warehouse\": \"MSK-S\",\n    \"products\": [\n        {\n            \"vendorCode\" : \"333\",\n            \"quantity\" : \"1\",\n            \"price\" : \"100.0\"\n         },\n         {\n             \"vendorCode\" : \"444\",\n             \"quantity\" : \"4\",\n             \"price\": \"299.99\"\n             }\n    ]\n}"
+				},
+				"url": {
+					"raw": "localhost:8080/api/postSellingDoc",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"postSellingDoc"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "postMovingDoc",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"number\": \"52\",\n    \"fromWarehouse\": \"MSK-S\",\n    \"toWarehouse\": \"MSK-N\",\n    \"products\": [\n        {\n            \"vendorCode\" : \"333\",\n            \"quantity\" : \"100\"\n         },\n         {\n             \"vendorCode\" : \"444\",\n             \"quantity\" : \"10\"\n             }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/postMovingDoc",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"postMovingDoc"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "postNewWarehouse",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"warehouse\": \"1-BiggestWarehouse-1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/postNewWarehouse",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"postNewWarehouse"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

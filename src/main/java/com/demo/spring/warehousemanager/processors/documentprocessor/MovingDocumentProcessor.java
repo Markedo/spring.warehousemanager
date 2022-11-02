@@ -31,12 +31,17 @@ class MovingDocumentProcessor {
                     Long vendorCode = Long.parseLong(product.get("vendorCode"));
                     Storage storageFrom = storageRepository.findByVendorCodeAndWarehouse(vendorCode, fromWarehouse);
                     if (storageFrom == null)
-                        throw new IllegalArgumentException("Can't find product with provided vendor code in target warehouse.");
-
+                        throw new IllegalArgumentException("Can't find product with provided vendor code \"" +
+                                + vendorCode
+                                + "\" in target warehouse \""
+                                + fromWarehouse
+                                + "\"");
                     long quantity = Long.parseLong(product.get("quantity"));
                     long editedStocks = storageFrom.getStock() - quantity;
                     if (editedStocks < 0)
-                        throw new IllegalArgumentException("Provided quantity exceeding stocks.");
+                        throw new IllegalArgumentException("Provided quantity exceeding stocks for product with vendorCode \""
+                            + vendorCode
+                            + "\". Available quantity is " + quantity);
                     else {
                         storageFrom.setStock(editedStocks);
                         editedStorages.add(storageFrom);

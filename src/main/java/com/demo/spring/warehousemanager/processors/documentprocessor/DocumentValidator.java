@@ -74,15 +74,15 @@ public class DocumentValidator {
                     }
 
                     if (docType.equals(DocType.ADMISSION) &&
-                            (!product.containsKey("name") || product.get("name").isEmpty())
-                            || !RegexUtil.checkRegex(product.get("name"), ".+$")) {
+                            (!product.containsKey("name") || product.get("name").isEmpty()
+                            || !RegexUtil.checkRegex(product.get("name"), ".+$"))) {
                         throw new IllegalArgumentException("Product contains incorrect \"name\" section");
                     }
 
                     if ((docType.equals(DocType.ADMISSION) || docType.equals(DocType.SELL)) &&
-                            (!product.containsKey("price") || product.get("price").isEmpty())
+                            (!product.containsKey("price") || product.get("price").isEmpty()
                             || !RegexUtil.checkRegex(product.get("price"), "[0-9.]+$")
-                            || new BigDecimal(product.get("price")).compareTo(BigDecimal.ZERO) < 0) {
+                            || new BigDecimal(product.get("price")).compareTo(BigDecimal.ZERO) < 0)) {
                         throw new IllegalArgumentException("Product contains incorrect \"price\" section");
                     }
                 }
